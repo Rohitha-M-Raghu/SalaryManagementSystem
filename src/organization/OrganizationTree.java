@@ -9,7 +9,7 @@ import java.util.Set;
 
 import exceptions.EmployeeNotFound;
 
-public class OrganizationTree {
+public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 	private String topEmployee;
 	private Map<String, Employee> employee; 
 	
@@ -18,6 +18,7 @@ public class OrganizationTree {
 		topEmployee = "noname";
 	}
 	
+	@Override
 	public void addEmployee(String name, float salary) {
 		employee.put(name, new Employee(name, salary));
 		if(topEmployee.equalsIgnoreCase("noname")) {
@@ -25,6 +26,7 @@ public class OrganizationTree {
 		}
 	}
 	
+	@Override
 	public void addSubordinate(String managerName, String subordinateName) throws EmployeeNotFound {
 		Employee manager = employee.get(managerName);
 		Employee subordinate = employee.get(subordinateName);
@@ -50,6 +52,7 @@ public class OrganizationTree {
 		this.topEmployee = topEmployee;
 	}
 	
+	@Override
 	public void displayEmployeeDetails(String employeeName) {
 		Employee employeeDetails = employee.get(employeeName);
 		System.out.println("Employee Details");
@@ -61,6 +64,7 @@ public class OrganizationTree {
 		
 	}
 	
+	@Override
 	public boolean displaySubordinates(List<String> subordinates) {
 		System.out.println("Subordinates: ");
 		if(subordinates.isEmpty()) {
@@ -78,6 +82,7 @@ public class OrganizationTree {
 		return employee.get(employeeName);
 	}
 	
+	@Override
 	public void  displaySubordinates(Employee emp) {
 		List<String> subordinateList = emp.getSubordinateNames();
 		for (int i = 0; i < subordinateList.size(); i++) {
@@ -88,6 +93,7 @@ public class OrganizationTree {
 		}
 	}
 	
+	@Override
 	public void findemployees(Employee emp) {
 		System.out.print("\n" + emp.getName() + "-" );
 		this.displaySubordinates(emp);
@@ -99,6 +105,8 @@ public class OrganizationTree {
 			findemployees(e);
 		}
 	}
+	
+	@Override
 	public void displayAllEmployees() {
 		System.out.println("Employee Tree");
 		System.out.println("-----------------");
@@ -106,6 +114,7 @@ public class OrganizationTree {
 		this.findemployees(emp);
 	}
 	
+	@Override
 	public float sumOfsubordinateSalary(Employee emp) {
 		if(emp.getSubordinates().isEmpty()) {
 			return 0;
@@ -118,6 +127,7 @@ public class OrganizationTree {
 		return salary;
 	}
 	
+	@Override
 	public int totalSubordinates(Employee emp) {
 		if(emp.getSubordinates().isEmpty()) {
 			return 0;
@@ -130,10 +140,12 @@ public class OrganizationTree {
 		return total;
 	}
 	
+	@Override
 	public float salaryCalculator(Employee emp) {
 		return sumOfsubordinateSalary(emp)/totalSubordinates(emp);
 	}
 	
+	@Override
 	public void salaryFinder(Employee emp) {
 		System.out.println("Employee Name: " + emp.getName());
 		System.out.println("Employee Salary: " + emp.getSalary());
@@ -145,6 +157,7 @@ public class OrganizationTree {
 		}
 	}
 	
+	@Override
 	public boolean isUnderPaid(Employee emp) {
 		if(this.salaryCalculator(emp) > emp.getSalary()) {
 			return true;
@@ -152,6 +165,7 @@ public class OrganizationTree {
 		return false;
 	}
 	
+	@Override
 	public void displayUnderpaidEmployee() {
 		System.out.println("Under Paid Employees");
 		System.out.println("----------------------");
@@ -163,6 +177,7 @@ public class OrganizationTree {
 		
 	}
 	
+	@Override
 	public void displaySalaryDetails() {
 		System.out.println("Salary Details");
 		System.out.println("-------------------");
