@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import exceptions.EmployeeNotFound;
+import exceptions.HierarchyError;
 
 public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 	private String topEmployee;
@@ -32,7 +33,13 @@ public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 		Employee subordinate = employee.get(subordinateName);
 		
 		try {
-			if(manager != null && subordinate != null) {
+			if(manager == null || subordinate == null) {
+				throw new EmployeeNotFound("Manager or Subordinate not Found...");
+			}
+			else if (hasSubordinate(subordinate, manager)) {
+				throw new HierarchyError();
+			}
+			else {
 				if(subordinate.getManagerName().equals("none")) {
 					manager.addSubordinate(subordinate);
 					subordinate.setManagerName(managerName);
@@ -47,6 +54,12 @@ public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 				}
 				
 			}
+		}
+		catch (EmployeeNotFound e) {
+			e.printStackTrace();
+		}
+		catch (HierarchyError e) {
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			throw new EmployeeNotFound("Error Occured while Assigning Manager...");
@@ -198,11 +211,14 @@ public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 	
 	@Override
 	public boolean hasSubordinate(Employee manager, Employee subordinate) {
-		if(manager.getSubordinateNames().containsAll(subordinate.getSubordinateNames())) {
+		if(manager == subordinate) {
 			return true;
 		}
 		for(Employee e: manager.getSubordinates()) {
-			hasSubordinate(e, subordinate);
+			if(hasSubordinate(e, subordinate)) {
+				return true;
+			}
+			
 		}
 		return false;
 	}

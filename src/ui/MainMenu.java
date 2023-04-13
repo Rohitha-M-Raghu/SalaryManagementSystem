@@ -15,12 +15,7 @@ public class MainMenu {
 		while (choice!= 12) {
 			displayMenu();
 			System.out.print("Enter your choice: ");
-			try {
-				choice = scanner.nextInt();
-			}
-			catch (Exception e) {
-				System.out.println("Wrong choice... Try Again...");
-			}
+			choice = scanner.nextInt();
 			
 			try {
 				switch (choice) {
