@@ -27,21 +27,31 @@ public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 	}
 	
 	@Override
-	public void addSubordinate(String managerName, String subordinateName) throws EmployeeNotFound {
+	public void assignSubordinate(String managerName, String subordinateName) throws EmployeeNotFound {
 		Employee manager = employee.get(managerName);
 		Employee subordinate = employee.get(subordinateName);
+		
 		try {
 			if(manager != null && subordinate != null) {
-				manager.addSubordinate(subordinate);
-				subordinate.setManagerName(managerName);
-				if(topEmployee.equalsIgnoreCase(subordinateName)) {
-					setTopEmployee(managerName);
+				if(subordinate.getManagerName().equals("none")) {
+					manager.addSubordinate(subordinate);
+					subordinate.setManagerName(managerName);
+					if(topEmployee.equalsIgnoreCase(subordinateName)) {
+						setTopEmployee(managerName);
+					}
+					System.out.println("Manager Assigned Successfully...");
+					return;
 				}
+				else {
+					System.out.println("Already has a manager...");
+				}
+				
 			}
 		}
 		catch (Exception e) {
 			throw new EmployeeNotFound("Error Occured while Assigning Manager...");
 		}
+		System.out.println("Assigning failed...");
 	}
 	
 	public String getTopEmployee() {
@@ -184,5 +194,16 @@ public class OrganizationTree implements SalaryManagement, EmployeeManagement{
 		employee.forEach((employeeName, emp)-> {
 			System.out.println(employeeName + "\t\t" + emp.getSalary());
 		});
+	}
+	
+	@Override
+	public boolean hasSubordinate(Employee manager, Employee subordinate) {
+		if(manager.getSubordinateNames().containsAll(subordinate.getSubordinateNames())) {
+			return true;
+		}
+		for(Employee e: manager.getSubordinates()) {
+			hasSubordinate(e, subordinate);
+		}
+		return false;
 	}
 }

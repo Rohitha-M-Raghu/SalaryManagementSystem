@@ -4,6 +4,7 @@ package ui;
 import java.util.Scanner;
 
 import exceptions.EmployeeNotFound;
+import organization.Employee;
 import organization.OrganizationTree;
 
 public class MainMenu {
@@ -11,7 +12,7 @@ public class MainMenu {
 	private static Scanner scanner = new Scanner(System.in);
 	public static void main(String[] args) {
 		int choice = 0;
-		while (choice!= 11) {
+		while (choice!= 12) {
 			displayMenu();
 			System.out.print("Enter your choice: ");
 			try {
@@ -54,6 +55,9 @@ public class MainMenu {
 					organizationTree.displayUnderpaidEmployee();
 					break;
 				case 11:
+					findSubordinate();
+					break;
+				case 12:
 					System.out.println("Exiting Application...");
 					break;
 				default:
@@ -81,7 +85,8 @@ public class MainMenu {
 		System.out.println("8. FInd salary");
 		System.out.println("9. Salary Details");
 		System.out.println("10. List of Underpaid Employees");
-		System.out.println("11. Exit");
+		System.out.println("11. Has Subordinate");
+		System.out.println("12. Exit");
 	}
 	
 	public static void addEmployee() {
@@ -126,8 +131,7 @@ public class MainMenu {
 		String managerName = scanner.next();
 		System.out.print("Enter Subordinate Name: ");
 		String subordinateName = scanner.next();
-		organizationTree.addSubordinate(managerName, subordinateName);
-		System.out.println("Manager Assigned Successfully...");
+		organizationTree.assignSubordinate(managerName, subordinateName);
 	}
 	
 	public static void displayManager() throws EmployeeNotFound {
@@ -161,5 +165,15 @@ public class MainMenu {
 		System.out.print("Enter Employee Name: ");
 		String name = scanner.next();
 		organizationTree.salaryFinder(organizationTree.getEmployee(name));
+	}
+	
+	public static void findSubordinate() {
+		System.out.println("Enter Employee Name: ");
+		String employeeName = scanner.next();
+		System.out.println("Enter Manager Name: ");
+		String managerName = scanner.next();
+		Employee subordinate = organizationTree.getEmployee(employeeName);
+		Employee manager = organizationTree.getEmployee(managerName);
+		System.out.println(organizationTree.hasSubordinate(manager, subordinate));
 	}
 }

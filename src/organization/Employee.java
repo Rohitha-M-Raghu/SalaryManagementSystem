@@ -26,6 +26,7 @@ public class Employee {
 		id = noOfEmployees;
 		this.name = name;
 		this.salary = salary;
+		this.managerName = "none";
 		this.subordinates = new ArrayList<>();
 	}
 
